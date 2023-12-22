@@ -8,8 +8,9 @@ import (
 func TestCountdown(t *testing.T) {
 	t.Run("Countdown test", func(t *testing.T) {
 		buffer := &bytes.Buffer{}
+		spySleeper := &SpySleeper{}
 
-		Countdown(buffer)
+		Countdown(buffer, spySleeper)
 
 		got := buffer.String()
 
