@@ -16,20 +16,38 @@ func FormServer(duration time.Duration) *httptest.Server {
 
 func TestWebsiteRacer(t *testing.T) {
 
-	slowServer := FormServer(20 * time.Millisecond)
-	fastServer := FormServer(0 * time.Microsecond)
+	t.Run("Test for one website being faster than the other", func(t *testing.T) {
+		slowServer := FormServer(20 * time.Millisecond)
+		fastServer := FormServer(0 * time.Microsecond)
 
-	defer slowServer.Close()
-	defer fastServer.Close()
+		defer slowServer.Close()
+		defer fastServer.Close()
 
-	slowUrl := slowServer.URL
-	fastUrl := fastServer.URL
+		slowUrl := slowServer.URL
+		fastUrl := fastServer.URL
 
-	want := fastUrl
-	got := WebsiteRacer(slowUrl, fastUrl)
+		want := fastUrl
+		got, err := EnhancedWebsiteRacer(slowUrl, fastUrl, 10*time.Second)
 
-	if got != want {
-		t.Errorf("Wanted %q, got %q", want, got)
-	}
+		if err != nil {
+			t.Fatalf("did not expect any error but got one %v", err)
+		}
+
+		if got != want {
+			t.Errorf("Wanted %q, got %q", want, got)
+		}
+	})
+
+	t.Run("Timeout incase of more than certain time", func(t *testing.T) {
+		server := FormServer(25 * time.Millisecond)
+
+		defer server.Close()
+
+		_, err := EnhancedWebsiteRacer(server.URL, server.URL, time.Duration(20*time.Millisecond))
+
+		if err == nil {
+			t.Errorf("wanted an error but got none")
+		}
+	})
 
 }
