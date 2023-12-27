@@ -43,7 +43,7 @@ func TestWalk(t *testing.T) {
 			"If all input is not string",
 			struct {
 				Name string
-				age  int
+				Age  int
 			}{"Chris", 33},
 			[]string{"Chris"},
 		},
@@ -55,6 +55,24 @@ func TestWalk(t *testing.T) {
 				Profile{"London", 33},
 			},
 			[]string{"Chris", "London"},
+		},
+
+		{
+			"Slices",
+			[]Profile{
+				{"London", 33},
+				{"Reykjavik", 34},
+			},
+			[]string{"London", "Reykjavik"},
+		},
+
+		{
+			"Maps",
+			map[string]string{
+				"Cow":   "Moo",
+				"Sheep": "Baa",
+			},
+			[]string{"Moo", "Baa"},
 		},
 	}
 
