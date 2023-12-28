@@ -28,7 +28,7 @@ func Walk(x interface{}, fn func(input string)) {
 	case reflect.Func:
 		valFnResult := val.Call(nil)
 		for _, res := range valFnResult {
-			Walk(res, fn)
+			Walk(res.Interface(), fn)
 		}
 
 	}
