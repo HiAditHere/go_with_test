@@ -22,7 +22,7 @@ func Walk(x interface{}, fn func(input string)) {
 			Walk(val.MapIndex(key).Interface(), fn)
 		}
 	case reflect.Chan:
-		for v, ok := val.Recv(); ok; {
+		for v, ok := val.Recv(); ok; v, ok = val.Recv() {
 			Walk(v.Interface(), fn)
 		}
 	case reflect.Func:
